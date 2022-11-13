@@ -8,6 +8,10 @@ defcolors = ["black", "orange", "blue", "red", "green"]*10
 defmarkerfills = defcolors
 
 
+def intbins(h):
+  return numpy.arange(len(h)+1)
+
+
 def divuncorr(xs, ys, dxs, dys):
   zs = numpy.where(ys == 0.0, 0.0, xs / ys)
   dzs = numpy.sqrt(dxs**2 + (zs * dys)**2) / ys
@@ -106,9 +110,13 @@ def hist(m, binning, normalized=False):
   return numpy.histogram(m, bins=binning, density=normalized)[0]
 
 
+def zeroerr(h):
+  return h , numpy.zeros_like(h)
+
+
 def poiserr(xs):
   uncerts = numpy.sqrt(xs)
-  uncerts = numpy.stack([- uncerts, uncerts], axis=0)
+  uncerts = numpy.stack([uncerts, uncerts], axis=0)
 
   return xs , uncerts
 
