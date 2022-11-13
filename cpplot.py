@@ -4,7 +4,7 @@ import matplotlib.figure as figure
 
 
 defmarkers = ["o", "s", "v", "^", "<", ">", "s", "X", "P", "D", "*"]*10
-defcolors = ["orange", "blue", "black", "red", "green"]*10
+defcolors = ["black", "orange", "blue", "red", "green"]*10
 defmarkerfills = defcolors
 
 
