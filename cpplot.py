@@ -14,7 +14,13 @@ def divuncorr(xs, ys, dxs, dys):
   return zs , dzs
 
 
-def compare(xs, ys, labels, xlabel, ylabel, lw=0, colors=defcolors, markers=defmarkers, markerfills=defmarkerfills, ratio=False):
+def compare \
+  ( xs, ys, labels, xlabel, ylabel
+  , lw=0, colors=defcolors, markers=defmarkers
+  , markerfills=defmarkerfills, ratio=False
+  , xticks=None, xticklabels=None
+  ):
+
   fig = figure.Figure(figsize=(8, 8))
 
   if ratio:
@@ -69,15 +75,31 @@ def compare(xs, ys, labels, xlabel, ylabel, lw=0, colors=defcolors, markers=defm
         )
   
   plt.set_xlabel(xlabel)
+  if xticks is not None:
+    plt.set_xticks(xticks)
+  if xticklabels is not None:
+    plt.set_xticklabels(xticklabels)
 
   return fig
 
 
-def comparehist(ys, binning, labels, xlabel, ylabel, colors=defcolors, markers=defmarkers, ratio=False, lw=0, markerfills=defmarkerfills):
+def comparehist \
+  ( ys, binning, labels, xlabel, ylabel
+  , colors=defcolors, markers=defmarkers, ratio=False
+  , lw=0, markerfills=defmarkerfills
+  , xticks=None, xticklabels=None
+  ):
+
   xs = (binning[1:]+binning[:-1]) / 2.0
   xerrs = ((binning[1:]-binning[:-1]) / 2.0)
 
-  return compare((xs, xerrs), ys, labels, xlabel, ylabel, colors=colors, markers=markers, ratio=ratio, lw=lw, markerfills=markerfills)
+  return \
+    compare \
+    ( (xs, xerrs), ys, labels, xlabel, ylabel
+    , colors=colors, markers=markers, ratio=ratio
+    , lw=lw, markerfills=markerfills
+    , xticks=xticks, xticklabels=xticklabels
+    )
 
 
 def hist(m, binning, normalized=False):
