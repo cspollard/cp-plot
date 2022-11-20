@@ -22,6 +22,7 @@ def compare \
   ( xs, ys, labels, xlabel, ylabel
   , lw=0, colors=defcolors, markers=defmarkers
   , markerfills=defmarkerfills, ratio=False
+  , ratioylabel=None
   , xticks=None, xticklabels=None
   ):
 
@@ -83,6 +84,8 @@ def compare \
     plt.set_xticks(xticks)
   if xticklabels is not None:
     plt.set_xticklabels(xticklabels)
+  if ratioylabel is not None:
+    plt.set_ylabel(ratioylabel)
 
   return fig
 
@@ -92,6 +95,7 @@ def comparehist \
   , colors=defcolors, markers=defmarkers, ratio=False
   , lw=0, markerfills=defmarkerfills
   , xticks=None, xticklabels=None
+  , ratioylabel=None
   ):
 
   xs = (binning[1:]+binning[:-1]) / 2.0
@@ -103,6 +107,7 @@ def comparehist \
     , colors=colors, markers=markers, ratio=ratio
     , lw=lw, markerfills=markerfills
     , xticks=xticks, xticklabels=xticklabels
+    , ratioylabel=ratioylabel
     )
 
 
