@@ -21,10 +21,12 @@ def divuncorr(xs, ys, dxs, dys):
 def compare \
   ( xs, ys, labels, xlabel, ylabel
   , lw=0, colors=defcolors, markers=defmarkers
-  , markerfills=defmarkerfills, ratio=False
+  , markerfills=None, ratio=False
   , ratioylabel=None
   , xticks=None, xticklabels=None
   ):
+  if markerfills is None:
+    markerfills = colors
 
   fig = figure.Figure(figsize=(8, 8))
 
@@ -93,7 +95,7 @@ def compare \
 def comparehist \
   ( ys, binning, labels, xlabel, ylabel
   , colors=defcolors, markers=defmarkers, ratio=False
-  , lw=0, markerfills=defmarkerfills
+  , lw=0, markerfills=None
   , xticks=None, xticklabels=None
   , ratioylabel=None
   ):
@@ -105,7 +107,7 @@ def comparehist \
     compare \
     ( (xs, xerrs), ys, labels, xlabel, ylabel
     , colors=colors, markers=markers, ratio=ratio
-    , lw=lw, markerfills=markerfills
+    , lw=lw, markerfills=None
     , xticks=xticks, xticklabels=xticklabels
     , ratioylabel=ratioylabel
     )
