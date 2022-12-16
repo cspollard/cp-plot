@@ -60,7 +60,6 @@ def compare \
     plt.axes.xaxis.set_ticklabels([])
     plt = fig.add_subplot(3, 1, 3)
 
-    print(xerrs)
     plt.plot([xs[0] - xerrs[0], xs[-1] + xerrs[-1]], [1.0, 1.0], lw=1, color="gray", zorder=999)
 
     nom, nomerr = ys[0]
