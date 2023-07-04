@@ -128,6 +128,12 @@ def poiserr(xs):
   return xs , uncerts
 
 
+def stderr(nom, vars):
+  diffs2 = list(map(lambda v: (v - nom)**2, vars))
+  print(sum(diffs2))
+  return nom , numpy.sqrt(sum(diffs2))
+
+
 def divbinom(ks, ns):
   def binom(k, n):
     if n == 0:
