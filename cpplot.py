@@ -107,7 +107,7 @@ def comparehist \
     compare \
     ( (xs, xerrs), ys, labels, xlabel, ylabel
     , colors=colors, markers=markers, ratio=ratio
-    , lw=lw, markerfills=None
+    , lw=lw, markerfills=markerfills
     , xticks=xticks, xticklabels=xticklabels
     , ratioylabel=ratioylabel
     )
