@@ -130,7 +130,6 @@ def poiserr(xs):
 
 def stderr(nom, vars):
   diffs2 = list(map(lambda v: (v - nom)**2, vars))
-  print(sum(diffs2))
   return nom , numpy.sqrt(sum(diffs2))
 
 
