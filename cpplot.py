@@ -24,7 +24,7 @@ def compare \
   , markerfills=None, ratio=False
   , ratioylabel=None
   , xticks=None, xticklabels=None
-  , alphas=None
+  , alphas=None, markeroffsets=False
   ):
 
   if markerfills is None:
@@ -44,15 +44,34 @@ def compare \
   else:
     plt = fig.add_subplot(111)
 
+  ncurves = len(ys)
+
   xs , xerrs = xs
 
-  for i in range(len(ys)):
+  markerlocs = []
+
+  for i in range(ncurves):
+    if markeroffsets:
+      xrange = numpy.stack([xs - xerrs[0], xs + xerrs[1]])
+      print(xrange)
+
+      # the marker is offset w.r.t. the midpoint of the errorbar
+      # but never at the left or right edge.
+      thisxs = xrange[0] + (i + 1) / (ncurves + 2) * (xrange[1] - xrange[0])
+
+      thisxerrs = numpy.stack([ thisxs - xrange[0] , xrange[1] - thisxs])
+      print(thisxerrs)
+      markerlocs.append((thisxs, thisxerrs))
+
+    else:
+      markerlocs.append((xs, xerrs))
+
     zs , zerrs = ys[i]
 
     plt.errorbar \
-      ( xs
+      ( markerlocs[i][0]
       , zs
-      , xerr=xerrs
+      , xerr=markerlocs[i][1]
       , yerr=zerrs
       , label=labels[i]
       , marker=markers[i]
@@ -74,7 +93,8 @@ def compare \
 
     nom, nomerr = ys[0]
     for i in range(1, len(ys)):
-      # TODO
+      xs = markerlocs[i][0]
+      xerrs = markerlocs[i][1]
       zs , zerrs = divuncorr(ys[i][0], nom, ys[i][1][0], nomerr)
 
       plt.errorbar \
@@ -110,10 +130,12 @@ def comparehist \
   , linewidths=None, markerfills=None
   , xticks=None, xticklabels=None
   , ratioylabel=None
+  , markeroffsets=False
   ):
 
   xs = (binning[1:]+binning[:-1]) / 2.0
   xerrs = ((binning[1:]-binning[:-1]) / 2.0)
+  xerrs = numpy.stack([xerrs , xerrs])
 
   return \
     compare \
@@ -123,6 +145,7 @@ def comparehist \
     , alphas=alphas
     , xticks=xticks, xticklabels=xticklabels
     , ratioylabel=ratioylabel
+    , markeroffsets=markeroffsets
     )
 
 
