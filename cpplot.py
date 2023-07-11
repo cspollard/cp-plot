@@ -25,6 +25,7 @@ def compare \
   , ratioylabel=None
   , xticks=None, xticklabels=None
   , alphas=None, markeroffsets=False
+  , errorfills=None
   ):
 
   if markerfills is None:
@@ -36,6 +37,9 @@ def compare \
   if alphas is None:
     alphas = list(map(lambda x : 1, colors))
 
+  if errorfills is None:
+    errorfills = list(map(lambda x : False, colors))
+
 
   fig = figure.Figure(figsize=(8, 8))
 
@@ -46,13 +50,13 @@ def compare \
 
   ncurves = len(ys)
 
-  xs , xerrs = xs
-
   markerlocs = []
 
   for i in range(ncurves):
+    thesexs , thesexerrs = xs[i]
+
     if markeroffsets:
-      xrange = numpy.stack([xs - xerrs[0], xs + xerrs[1]])
+      xrange = numpy.stack([thesexs - thesexerrs[0], thesexs + thesexerrs[1]])
       print(xrange)
 
       # the marker is offset w.r.t. the midpoint of the errorbar
@@ -64,24 +68,46 @@ def compare \
       markerlocs.append((thisxs, thisxerrs))
 
     else:
-      markerlocs.append((xs, xerrs))
+      markerlocs.append((thesexs, thesexerrs))
 
     zs , zerrs = ys[i]
 
-    plt.errorbar \
-      ( markerlocs[i][0]
-      , zs
-      , xerr=markerlocs[i][1]
-      , yerr=zerrs
-      , label=labels[i]
-      , marker=markers[i]
-      , color=colors[i]
-      , markerfacecolor=markerfills[i]
-      , linewidth=linewidths[i]
-      , elinewidth=2
-      , zorder=i
-      , alpha=alphas[i]
-      )
+    if not errorfills[i]:
+      plt.errorbar \
+        ( markerlocs[i][0]
+        , zs
+        , xerr=markerlocs[i][1]
+        , yerr=zerrs
+        , label=labels[i]
+        , marker=markers[i]
+        , color=colors[i]
+        , markerfacecolor=markerfills[i]
+        , linewidth=linewidths[i]
+        , elinewidth=2
+        , zorder=i
+        , alpha=alphas[i]
+        )
+
+    else:
+      plt.plot \
+        ( markerlocs[i][0]
+        , zs
+        , label=labels[i]
+        , color=colors[i]
+        , markerfacecolor=markerfills[i]
+        , linewidth=linewidths[i]
+        , zorder=i
+        , alpha=alphas[i]
+        )
+
+      plt.fill_between \
+        ( markerlocs[i][0]
+        , zs + zerrs[1]
+        , zs - zerrs[0]
+        , color=colors[i]
+        , zorder=i-0.5
+        , alpha=alphas[i]*0.5
+        )
 
   plt.set_ylabel(ylabel)
 
@@ -139,7 +165,7 @@ def comparehist \
 
   return \
     compare \
-    ( (xs, xerrs), ys, labels, xlabel, ylabel
+    ( [(xs, xerrs)] * len(ys) , ys, labels, xlabel, ylabel
     , colors=colors, markers=markers, ratio=ratio
     , linewidths=linewidths, markerfills=markerfills
     , alphas=alphas
