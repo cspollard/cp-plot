@@ -20,13 +20,22 @@ def divuncorr(xs, ys, dxs, dys):
 
 def compare \
   ( xs, ys, labels, xlabel, ylabel
-  , lw=0, colors=defcolors, markers=defmarkers
+  , linewidths=None, colors=defcolors, markers=defmarkers
   , markerfills=None, ratio=False
   , ratioylabel=None
   , xticks=None, xticklabels=None
+  , alphas=None
   ):
+
   if markerfills is None:
     markerfills = colors
+
+  if linewidths is None:
+    linewidths = list(map(lambda x : 0, colors))
+
+  if alphas is None:
+    alphas = list(map(lambda x : 1, colors))
+
 
   fig = figure.Figure(figsize=(8, 8))
 
@@ -49,9 +58,10 @@ def compare \
       , marker=markers[i]
       , color=colors[i]
       , markerfacecolor=markerfills[i]
-      , linewidth=lw
+      , linewidth=linewidths[i]
       , elinewidth=2
       , zorder=i
+      , alpha=alphas[i]
       )
 
   plt.set_ylabel(ylabel)
@@ -76,9 +86,10 @@ def compare \
         , marker=markers[i]
         , color=colors[i]
         , markerfacecolor=markerfills[i]
-        , linewidth=lw
+        , linewidth=linewidths[i]
         , elinewidth=2
         , zorder=i
+        , alpha=alphas[i]
         )
   
   plt.set_xlabel(xlabel)
@@ -95,7 +106,8 @@ def compare \
 def comparehist \
   ( ys, binning, labels, xlabel, ylabel
   , colors=defcolors, markers=defmarkers, ratio=False
-  , lw=0, markerfills=None
+  , alphas=None
+  , linewidths=None, markerfills=None
   , xticks=None, xticklabels=None
   , ratioylabel=None
   ):
@@ -107,7 +119,8 @@ def comparehist \
     compare \
     ( (xs, xerrs), ys, labels, xlabel, ylabel
     , colors=colors, markers=markers, ratio=ratio
-    , lw=lw, markerfills=markerfills
+    , linewidths=linewidths, markerfills=markerfills
+    , alphas=alphas
     , xticks=xticks, xticklabels=xticklabels
     , ratioylabel=ratioylabel
     )
