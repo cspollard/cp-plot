@@ -19,10 +19,9 @@ def divuncorr(xs, ys, dxs, dys):
 
 
 def compare \
-  ( xs, ys, labels, xlabel, ylabel
+  ( plt, xs, ys, labels, xlabel, ylabel
   , linewidths=None, colors=defcolors, markers=defmarkers
-  , markerfills=None, ratio=False
-  , ratioylabel=None
+  , markerfills=None
   , xticks=None, xticklabels=None
   , alphas=None, markeroffsets=False
   , errorfills=None
@@ -40,13 +39,6 @@ def compare \
   if errorfills is None:
     errorfills = list(map(lambda x : False, colors))
 
-
-  fig = figure.Figure(figsize=(8, 8))
-
-  if ratio:
-    plt = fig.add_subplot(3, 1, (1, 2))
-  else:
-    plt = fig.add_subplot(111)
 
   ncurves = len(ys)
 
@@ -110,54 +102,33 @@ def compare \
         )
 
   plt.set_ylabel(ylabel)
-
-  if ratio:
-    plt.axes.xaxis.set_ticklabels([])
-    plt = fig.add_subplot(3, 1, 3)
-
-    plt.plot([xs[0] - xerrs[0], xs[-1] + xerrs[-1]], [1.0, 1.0], lw=1, color="gray", zorder=999)
-
-    nom, nomerr = ys[0]
-    for i in range(1, len(ys)):
-      xs = markerlocs[i][0]
-      xerrs = markerlocs[i][1]
-      zs , zerrs = divuncorr(ys[i][0], nom, ys[i][1][0], nomerr)
-
-      plt.errorbar \
-        ( xs
-        , zs
-        , xerr=xerrs
-        , yerr=zerrs
-        , label=labels[i]
-        , marker=markers[i]
-        , color=colors[i]
-        , markerfacecolor=markerfills[i]
-        , linewidth=linewidths[i]
-        , elinewidth=2
-        , zorder=i
-        , alpha=alphas[i]
-        )
-  
   plt.set_xlabel(xlabel)
   if xticks is not None:
     plt.set_xticks(xticks)
   if xticklabels is not None:
     plt.set_xticklabels(xticklabels)
-  if ratioylabel is not None:
-    plt.set_ylabel(ratioylabel)
 
-  return fig
+  return plt
 
 
 def comparehist \
-  ( ys, binning, labels, xlabel, ylabel
-  , colors=defcolors, markers=defmarkers, ratio=False
+  ( plt, ys, binning, labels, xlabel, ylabel
+  , colors=defcolors, markers=defmarkers
   , alphas=None
   , linewidths=None, markerfills=None
   , xticks=None, xticklabels=None
-  , ratioylabel=None
   , markeroffsets=False
   ):
+
+  if markerfills is None:
+    markerfills = colors
+
+  if linewidths is None:
+    linewidths = list(map(lambda x : 0, colors))
+
+  if alphas is None:
+    alphas = list(map(lambda x : 1, colors))
+
 
   xs = (binning[1:]+binning[:-1]) / 2.0
   xerrs = ((binning[1:]-binning[:-1]) / 2.0)
@@ -165,14 +136,67 @@ def comparehist \
 
   return \
     compare \
-    ( [(xs, xerrs)] * len(ys) , ys, labels, xlabel, ylabel
-    , colors=colors, markers=markers, ratio=ratio
+    ( plt, [(xs, xerrs)] * len(ys) , ys, labels, xlabel, ylabel
+    , colors=colors, markers=markers
     , linewidths=linewidths, markerfills=markerfills
     , alphas=alphas
     , xticks=xticks, xticklabels=xticklabels
-    , ratioylabel=ratioylabel
     , markeroffsets=markeroffsets
     )
+
+
+def comparehistratio \
+  ( plt , ys, binning, labels, xlabel, ylabel
+  , colors=defcolors, markers=defmarkers
+  , alphas=None
+  , linewidths=None, markerfills=None
+  , xticks=None, xticklabels=None
+  ):
+
+  if markerfills is None:
+    markerfills = colors
+
+  if linewidths is None:
+    linewidths = list(map(lambda x : 0, colors))
+
+  if alphas is None:
+    alphas = list(map(lambda x : 1, colors))
+
+
+  xs = (binning[1:]+binning[:-1]) / 2.0
+  xerrs = ((binning[1:]-binning[:-1]) / 2.0)
+  xerrs = numpy.stack([xerrs , xerrs])
+
+  plt.plot([xs[0]-xerrs[0], xs[-1]+xerrs[-1]], [1.0, 1.0], lw=1, color="gray", zorder=999)
+
+  nom, nomerr = ys[0]
+  for i in range(1, len(ys)):
+    zs , zerrs = divuncorr(ys[i][0], nom, ys[i][1][0], nomerr)
+
+    plt.errorbar \
+      ( xs
+      , zs
+      , xerr=xerrs
+      , yerr=zerrs
+      , label=labels[i]
+      , marker=markers[i]
+      , color=colors[i]
+      , markerfacecolor=markerfills[i]
+      , linewidth=linewidths[i]
+      , elinewidth=2
+      , zorder=i
+      , alpha=alphas[i]
+      )
+
+  plt.set_ylabel(ylabel)
+
+  plt.set_xlabel(xlabel)
+  if xticks is not None:
+    plt.set_xticks(xticks)
+  if xticklabels is not None:
+    plt.set_xticklabels(xticklabels)
+
+  return plt
 
 
 def hist(m, binning, normalized=False):
