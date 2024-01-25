@@ -219,16 +219,16 @@ def stderr(nom, vars):
   return nom , numpy.sqrt(sum(diffs2))
 
 
+def binom(k, n):
+  if n == 0:
+    return (0, 0)
+
+  r = stats.binomtest(k, n).proportion_ci(0.68)
+
+  return (r.low, r.high)
+
+
 def divbinom(ks, ns):
-  def binom(k, n):
-    if n == 0:
-      return (0, 0)
-
-    r = stats.binomtest(k, n).proportion_ci(0.68)
-    cv = k / n
-
-    return (r.low, r.high)
-
   uncerts = [ binom(k, n) for k , n in zip(ks, ns) ]
 
   cv = ks / ns
@@ -237,5 +237,4 @@ def divbinom(ks, ns):
   uncerts[0] = cv - uncerts[0]
   uncerts[1] = uncerts[1] - cv
 
-  return ks / ns , uncerts
-
+  return cv , uncerts
