@@ -167,7 +167,7 @@ def comparehistratio \
   xerrs = ((binning[1:]-binning[:-1]) / 2.0)
   xerrs = numpy.stack([xerrs , xerrs])
 
-  plt.plot([xs[0]-xerrs[0], xs[-1]+xerrs[-1]], [1.0, 1.0], lw=1, color="gray", zorder=999)
+  plt.plot([binning[0], binning[-1]], [1.0, 1.0], lw=1, color="gray", zorder=999)
 
   nom, nomerr = ys[0]
   for i in range(1, len(ys)):
