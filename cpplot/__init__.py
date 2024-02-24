@@ -117,6 +117,7 @@ def comparehist \
   , alphas=None
   , linewidths=None, markerfills=None
   , xticks=None, xticklabels=None
+  , errorfills=None
   , markeroffsets=False
   ):
 
@@ -142,6 +143,7 @@ def comparehist \
     , alphas=alphas
     , xticks=xticks, xticklabels=xticklabels
     , markeroffsets=markeroffsets
+    , errorfills=errorfills
     )
 
 
