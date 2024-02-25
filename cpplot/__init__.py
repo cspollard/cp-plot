@@ -201,8 +201,8 @@ def comparehistratio \
   return plt
 
 
-def hist(m, binning, normalized=False):
-  return numpy.histogram(m, bins=binning, density=normalized)[0]
+def hist(m, binning, weights=None, normalized=False):
+  return numpy.histogram(m, bins=binning, weights=weights, density=normalized)[0]
 
 
 def zeroerr(h):
