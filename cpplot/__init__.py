@@ -49,14 +49,12 @@ def compare \
 
     if markeroffsets:
       xrange = numpy.stack([thesexs - thesexerrs[0], thesexs + thesexerrs[1]])
-      print(xrange)
 
       # the marker is offset w.r.t. the midpoint of the errorbar
       # but never at the left or right edge.
-      thisxs = xrange[0] + (i + 1) / (ncurves + 2) * (xrange[1] - xrange[0])
+      thisxs = xrange[0] + (i + 1) / (ncurves + 1) * (xrange[1] - xrange[0])
 
       thisxerrs = numpy.stack([ thisxs - xrange[0] , xrange[1] - thisxs])
-      print(thisxerrs)
       markerlocs.append((thisxs, thisxerrs))
 
     else:
